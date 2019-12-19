@@ -1,7 +1,7 @@
 defmodule RomanNumeralsTest do
   use ExUnit.Case
 
-  # @tag :pending
+  @tag :pending
   test "1" do
     assert RomanNumerals.numeral(1) == "I"
   end
@@ -36,7 +36,7 @@ defmodule RomanNumeralsTest do
     assert RomanNumerals.numeral(9) == "IX"
   end
 
-  @tag :pending
+  # @tag :pending
   test "27" do
     assert RomanNumerals.numeral(27) == "XXVII"
   end

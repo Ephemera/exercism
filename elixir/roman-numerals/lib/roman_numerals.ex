@@ -4,45 +4,29 @@ defmodule RomanNumerals do
   """
   @spec numeral(pos_integer) :: String.t()
   def numeral(number) do
-    range(number)
-  end
+    romans = ["", "", "M", "D", "C", "L", "X", "V", "I"]
+    numbers = [1000, 100, 10, 1]
 
-  defp match(0, result) do
-    result    
-  end
+    numbers
+    |> Enum.zip(Enum.chunk_every(romans, 3, 2))
+    |> Enum.reduce(["", number], fn {k, v}, [str, n] ->
+      case trunc(n / k) do
+        x when x == 0 ->
+          [str, n]
 
-  defp match(n, result) do
-    # |> Enum.find(fn { x, str } ->
-    #   # n > x && {n - x, result <> str} || {n,  
-    # end)
-  end
+        x when x in 1..3 ->
+          [str <> String.duplicate(Enum.at(v, 2), x), n - x * k]
 
-  defp range(number) do
-    %{
-      1000: [ "M" ],
-      100: [ "C", "D" ],
-      10: [ "X", "L" ],
-      1: [ "I", "V" ],
-    }
-    |> Enum.reduce({"", n}, fn { level, strs }, acc ->
-      if number / level > 1 do
-        result = case number / level do
-          n in 1..3 -> {number - n, "" + String.duplicate("I", n)}
-          n == 4 -> {number - n, "IV"
-          n in 5..8 -> "V" + String.duplicate("I", n-5)
-          n == 9 -> "IX"
-        end
-      else
+        x when x == 4 ->
+          [str <> Enum.at(v, 2) <> Enum.at(v, 1), n - x * k]
+
+        x when x in 5..8 ->
+          [str <> Enum.at(v, 1) <> String.duplicate(Enum.at(v, 2), x - 5), n - x * k]
+
+        x when x == 9 ->
+          [str <> Enum.at(v, 2) <> Enum.at(v, 0), n - x * k]
       end
     end)
-
-    cond do
-      n -> cond do
-        n in 1..3 -> "" + String.duplicate("I", n)
-        n == 4 -> "IV"
-        n in 5..8 -> "V" + String.duplicate("I", n-5)
-        n == 9 -> "IX"
-      end
-    end
+    |> Enum.at(0)
   end
 end
